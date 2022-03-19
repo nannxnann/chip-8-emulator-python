@@ -17,80 +17,80 @@ memory[2]=0x90
 memory[3]=0x90
 memory[4]=0xf0
 memory[5]=0x20
-memory[7]=0x60
+memory[6]=0x60
+memory[7]=0x20
 memory[8]=0x20
-memory[9]=0x20
-memory[10]=0x70
-memory[11]=0xf0
-memory[12]=0x10
-memory[13]=0xf0
-memory[14]=0x80
+memory[9]=0x70
+memory[10]=0xf0
+memory[11]=0x10
+memory[12]=0xf0
+memory[13]=0x80
+memory[14]=0xf0
 memory[15]=0xf0
-memory[16]=0xf0
-memory[17]=0x10
-memory[18]=0xf0
-memory[19]=0x10
-memory[20]=0xf0#3
+memory[16]=0x10
+memory[17]=0xf0
+memory[18]=0x10
+memory[19]=0xf0#3
+memory[20]=0x90
 memory[21]=0x90
-memory[22]=0x90
-memory[23]=0xf0
+memory[22]=0xf0
+memory[23]=0x10
 memory[24]=0x10
-memory[25]=0x10
-memory[26]=0xf0
-memory[27]=0x80
-memory[28]=0xf0
-memory[29]=0x10
+memory[25]=0xf0
+memory[26]=0x80
+memory[27]=0xf0
+memory[28]=0x10
+memory[29]=0xf0
 memory[30]=0xf0
-memory[31]=0xf0
-memory[32]=0x80
-memory[33]=0xf0
-memory[34]=0x90
+memory[31]=0x80
+memory[32]=0xf0
+memory[33]=0x90
+memory[34]=0xf0
 memory[35]=0xf0
-memory[36]=0xf0
-memory[37]=0x10
-memory[38]=0x20
+memory[36]=0x10
+memory[37]=0x20
+memory[38]=0x40
 memory[39]=0x40
-memory[40]=0x40
-memory[41]=0xf0
-memory[42]=0x90
-memory[43]=0xf0
-memory[44]=0x90
+memory[40]=0xf0
+memory[41]=0x90
+memory[42]=0xf0
+memory[43]=0x90
+memory[44]=0xf0
 memory[45]=0xf0
-memory[46]=0xf0
-memory[47]=0x90
-memory[48]=0xf0
-memory[49]=0x90
-memory[50]=0x90
-memory[51]=0xe0
-memory[52]=0x90
-memory[53]=0xe0
-memory[54]=0x90
-memory[55]=0xe0
-memory[56]=0xf0
+memory[46]=0x90
+memory[47]=0xf0
+memory[48]=0x10
+memory[49]=0xf0
+memory[50]=0xe0
+memory[51]=0x90
+memory[52]=0xe0
+memory[53]=0x90
+memory[54]=0xe0
+memory[55]=0xf0
+memory[56]=0x80
 memory[57]=0x80
 memory[58]=0x80
-memory[59]=0x80
-memory[60]=0xf0
-memory[61]=0xe0
+memory[59]=0xf0
+memory[60]=0xe0
+memory[61]=0x90
 memory[62]=0x90
 memory[63]=0x90
-memory[64]=0x90
-memory[65]=0xe0
-memory[66]=0xf0
-memory[67]=0x80
-memory[68]=0xf0
-memory[69]=0x80
+memory[64]=0xe0
+memory[65]=0xf0
+memory[66]=0x80
+memory[67]=0xf0
+memory[68]=0x80
+memory[69]=0xf0
 memory[70]=0xf0
-memory[71]=0xf0
-memory[72]=0x80
-memory[73]=0xf0
+memory[71]=0x80
+memory[72]=0xf0
+memory[73]=0x80
 memory[74]=0x80
-memory[75]=0x80
+memory[75]=0x0
 memory[76]=0x0
 memory[77]=0x0
 memory[78]=0x0
 memory[79]=0x0
-memory[80]=0x0
 
 #and f opcode not finish 
 
@@ -187,16 +187,18 @@ class Chip8:
         elif opFirstByte == 12:
             self.reg[opSecondByte] = (self.opcode&0x00ff) & random.randint(0,255)
         elif opFirstByte == 13:
-            for i in range(opFourthByte):
+            for i in range(0,opFourthByte):
                 for j in range(8):
                     #print(self.reg[opThirdByte]+i)
                     #print(self.reg[opSecondByte]+j)
                     #print(self.regI+i)
-                    if(graphic[self.reg[opThirdByte]+i][self.reg[opSecondByte]+j]+((memory[self.regI+i]>>(7-j))%2)>=2):
-                        self.reg[15]=1
-                    else:
-                        self.reg[15]=0
-                    graphic[self.reg[opThirdByte]+i][self.reg[opSecondByte]+j]^=((memory[self.regI+i]>>(7-j))%2)
+                    if(opThirdByte<len(self.reg) and self.regI+i< len(memory)):
+                        if(self.reg[opThirdByte]+i<32 and self.reg[opSecondByte]+j < 100):
+                            if(graphic[self.reg[opThirdByte]+i][self.reg[opSecondByte]+j]+((memory[self.regI+i]>>(7-j))%2)>=2):
+                                self.reg[15]=1
+                            else:
+                                self.reg[15]=0
+                            graphic[self.reg[opThirdByte]+i][self.reg[opSecondByte]+j]^=((memory[self.regI+i]>>(7-j))%2)
                     
         elif opFirstByte == 14:
             if(opThirdByte==0x9):
@@ -338,4 +340,4 @@ while(1):
 
 
     pygame.display.update()
-    #time.sleep(0.005)
+    time.sleep(0.001)
